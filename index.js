@@ -6,6 +6,11 @@ const port = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
+const validateData = (data) => {
+    return data.every(item => {
+        return (!isNaN(item) && !isNaN(parseFloat(item))) || /^[a-zA-Z]$/.test(item);
+    });
+};
 
 const separateData = (data) => {
     const numbers = [];
@@ -31,7 +36,7 @@ const separateData = (data) => {
 app.post('/bfhl', (req, res) => {
     const { data } = req.body;
 
-    if (!Array.isArray(data)) {
+    if (!Array.isArray(data) || !validateData(data)) {
         return res.status(400).json({ is_success: false, error: 'Invalid input format' });
     }
 
@@ -39,9 +44,9 @@ app.post('/bfhl', (req, res) => {
 
     res.json({
         is_success: true,
-        user_id: 'kanishak_khanna_14022003',  
-        email: 'kanishak.khanna2021@vitstudent.ac.in',          
-        roll_number: '21BCI0147',         
+        user_id: 'kanishak_khanna_14022003',
+        email: 'kanishak.khanna2021@vitstudent.ac.in',
+        roll_number: '21BCI0147',
         numbers: numbers,
         alphabets: alphabets,
         highest_lowercase_alphabet: highestLowercase ? [highestLowercase] : []
